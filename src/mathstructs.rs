@@ -34,9 +34,10 @@ pub enum MathOperator {
     Multiply,
     Divide,
     Assign,
+    Power,
 }
 
-pub const OPERATORS: &str = "+-*/=;";
+pub const OPERATORS: &str = "+-*/=;^";
 
 pub fn to_math(s: &str) -> MathOperator {
     match s {
@@ -45,6 +46,7 @@ pub fn to_math(s: &str) -> MathOperator {
         "*" => MathOperator::Multiply,
         "/" => MathOperator::Divide,
         "=" => MathOperator::Assign,
+        "^" => MathOperator::Power,
         _ => panic!("Invalid operator: {}", s),
     }
 }

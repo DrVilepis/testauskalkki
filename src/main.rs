@@ -35,11 +35,24 @@ where
                         } else if c.is_ascii_digit() {
                             let tmpc = math_state.buffer.pop().unwrap();
                             if tmpc == '-' {
-                                math.push(MathElement::Operator(to_math(&math_state.buffer)));
-                                math_state.buffer.clear();
-                                math_state.buffer.push(tmpc);
-                                math_state.buffer.push(c);
-                                math_state.curmath = Some(TS::Number);
+                                if !math_state.buffer.is_empty() {
+                                    math.push(MathElement::Operator(to_math(&math_state.buffer)));
+                                    math_state.buffer.clear();
+                                    math_state.buffer.push(tmpc);
+                                    math_state.buffer.push(c);
+                                    math_state.curmath = Some(TS::Number);
+                                } else {
+                                    if let Some(&MathElement::Operator(_)) = math.last() {
+                                        math_state.buffer.push(tmpc);
+                                        math_state.buffer.push(c);
+                                        math_state.curmath = Some(TS::Number);
+                                    } else {
+                                        math_state.buffer.push(tmpc);
+                                        math.push(MathElement::Operator(to_math(&math_state.buffer)));
+                                        math_state.curmath = None;
+                                        start_math(math_state, c);
+                                    }
+                                }
                             } else {
                                 math_state.buffer.push(tmpc);
                                 math.push(MathElement::Operator(to_math(&math_state.buffer)));
@@ -55,11 +68,12 @@ where
                             math_state.buffer.push(c);
                         } else {
                             math_state.curmath = None;
-                            if math_state.buffer == "-" {
-                                math.push(MathElement::Operator(to_math(&math_state.buffer)));
-                            } else {
-                                math.push(MathElement::Number(parse_int(&math_state.buffer)));
-                            }
+                            //if math_state.buffer == "-" {
+                            //    math.push(MathElement::Operator(to_math(&math_state.buffer)));
+                            //} else {
+                            math.push(MathElement::Number(parse_int(&math_state.buffer)));
+                            math_state.buffer.clear();
+                            //}
                             start_math(math_state, c);
                         }
                     }
@@ -140,9 +154,6 @@ fn start_math(ms: &mut MathState, c: char) {
     } else if c.is_ascii_alphabetic() {
         ms.buffer.push(c);
         Some(TS::Variable)
-    } else if c == '-' {
-        ms.buffer.push(c);
-        Some(TS::Number)
     } else if oper.clone().contains(&c) {
         ms.buffer.push(c);
         Some(TS::Operator)
@@ -155,7 +166,4 @@ fn start_math(ms: &mut MathState, c: char) {
 
 fn parse_int(s: &str) -> f64 {
     s.parse::<f64>().unwrap()
-}
-fn exec_func(fn_name: &str,args: Vec<f64>) -> f64 {
-    todo!();
 }

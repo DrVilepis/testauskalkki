@@ -53,8 +53,8 @@ pub fn round(num: f64) -> f64 {
     num.round()
 }
 
-pub fn pow(_base: f64, _exponent: f64) {
-    todo!();
+pub fn pow(base: f64, exponent: f64) -> f64 {
+    base.powf(exponent)
 }
 
 pub fn log(_base: f64, _numerus: f64) {

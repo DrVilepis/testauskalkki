@@ -99,8 +99,10 @@ pub fn reduce(vars: &mut HashMap<String, Math>, math: &MathElement) -> f64 {
 pub fn operate(oper: &MathOperator, n1: f64, n2: f64) -> f64 {
     match oper {
         MathOperator::Add => ltk::basic::add(n1, n2),
+        MathOperator::Subtract => ltk::basic::subtract(n1, n2),
         MathOperator::Multiply => ltk::basic::multiply(n1, n2),
         MathOperator::Divide => ltk::basic::divide(n1, n2),
+        MathOperator::Power => ltk::basic::pow(n1, n2),
         _ => todo!(),
     }
 }
