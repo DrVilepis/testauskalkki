@@ -72,3 +72,27 @@ pub fn log(_base: f64, _numerus: f64) {
 pub fn modulo(num1: f64, num2: f64) -> f64 {
     num1 % num2
 }
+
+pub fn factor(mut num: f64) -> Vec<f64> {
+    let mut ret = Vec::new();
+    let inc = vec![1.0, 2.0, 2.0, 4.0, 2.0, 4.0, 2.0, 4.0, 6.0, 2.0, 6.0];
+    let mut k = 2f64;
+    let mut i = 0;
+    while multiply(k, k) <= num {
+        if modulo(num, k) == 0.0 {
+            ret.push(k);
+            num = divide(num, k);
+        } else {
+            k += inc[i];
+            if i < 10 {
+                i += 1;
+            } else {
+                i = 3
+            }
+        }
+    }
+    if num > 1.0 {
+        ret.push(num);
+    }
+    ret
+}
